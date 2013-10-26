@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        <style>
+        .button {
+            padding:8px;
+                background-color:#cdcdcd;
+                color:#fff;
+                cursor:pointer;
+            }
+        </style>
+        
+    </head>
+    <body>
+        <script type="text/javascript">
+        $function() {
+        function test(json) {
+        	var displayResults = document.getElementById('results');
+    		var container = document.createElement('div');
+
+		// Initialize a var for new elements
+    		var div;
+
+		// Build a list of images
+		for (var page in json.query.pages) {
+
+        // Create an element to hold an image. Its easier to append
+        // stuff to the page this way.
+        div = document.createElement('div');
+
+        // Stick html into the new div, append to the container.
+        div.innerHTML = json.query.pages[page];
+        container.appendChild(div);
+        };
+        };
+        };
+        </script>
+        <script>
+        $function(){
+        jQuery(".button").on("click", function(){
+        $.ajax({
+            type: "POST",
+            url: "http://en.wikipedia.org/w/api.php?",
+            data: {action: "query", prop: "links", format: "json", plnamespace: 4,
+                  pllimit: 50,
+                  titles: "Pizza|Pasta|Meatballs",
+                  callback: "test"},
+            dataType: "json",
+            
+            });
+            $.done(function(data) {
+                alert(data);
+                });
+        });
+        };
+        </script>
+        <div class="button">Submit</div>
+        <div class="results" id="results">
+        Results should go here.
+        </div>
+    </body>
+</html>
