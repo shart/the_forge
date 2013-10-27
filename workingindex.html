@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<!-- saved from url=(0040)http://bl.ocks.org/mbostock/raw/4062045/ -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<style>
+
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: 1;
+}
+
+/*.theTitle {
+    color: #000 !important;
+    font-size: 1.25em !important;
+    width: 30px;
+    height: 10px;
+    padding: 4px 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .container {
+    display: inline-block !important;
+    box-sizing: border-box !important;
+    width:20px !important;
+    height: 10px !important;
+    background: #000 !important;
+  }
+
+  svg {
+    position:fixed;
+    z-index: -1;
+  }*/
+</style>
+</head>
+<body style="">
+<script src="./Myriel_files/d3.v3.min.js"></script> 
+<script>
+
+var width = 960,
+    height = 500;
+
+var color = d3.scale.category20();
+
+var force = d3.layout.force()
+    .charge(-40)
+    .linkDistance(50)
+    .size([width, height]);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+d3.json("bigjson.json", function(error, graph) {
+  force
+      .nodes(graph.nodes) // Get/Set Node Data
+      .links(graph.links) // Get/Set Link Data
+      .start();
+
+  var link = svg.selectAll(".link") //Selects all Links
+      .data(graph.links)
+      .enter().append("line")
+      .attr("class", "link")
+      .style("stroke-width", function(d) { return Math.sqrt(d.lweight); }); //Sets Link Line Weight derived from the 'value' data point in the 'links' data set. Swap out wieght
+
+  var texts = svg.selectAll("text.label")
+                .data(graph.nodes)
+                .enter().append("text")
+                .attr("class", "label")
+                .attr("fill", "black")
+                .text(function(d) {  return d.title;  });
+
+
+  var node = svg.selectAll(".node")
+      .data(graph.nodes)
+      .enter().append("circle")
+    
+      .attr("class", "node") // Adds the class 'node' to the circle elements
+      .attr("r", 5)
+      .style("fill", "red") // Sets Node Color
+      //.append("div")
+      //.attr("class", "container")
+      //.append("a")
+      //.attr("href", function(d) {return d.url;})
+      .call(force.drag);
+
+
+
+  force.on("tick", function() {
+    link.attr("x1", function(d) { return d.source.x; }) // 'source' and 'target' are defined in the 'links' set of data. 'source' data is being processed by the library for x and y data
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; }); 
+
+    node.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });
+
+    texts.attr("transform", function(d) {
+        return "translate(" + d.x + "," + d.y + ")";
+    });
+  });
+});
+
+</script>
+</body></html>

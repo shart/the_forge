@@ -65,7 +65,12 @@ def parsetitle( titles, type, parentid )
   ## parse and save result
   result = JSON.parse(postData.body)
   pages=result["query"]["pages"].keys
+<<<<<<< HEAD
   
+=======
+
+  i=0
+>>>>>>> ff128337f961ce2c8d1c7273ff20bd093e5188a6
   result["query"]["pages"].each do |page|
     if page[1]["title"] != nil and page[1]["length"] != nil
       links[page[1]["title"]] = { 
@@ -74,6 +79,13 @@ def parsetitle( titles, type, parentid )
         "pageid"=>page[1]["pageid"],
         "parentid"=>parentid 
       }
+<<<<<<< HEAD
+=======
+      i=i+1;
+      # if i>5 
+      #   break
+      # end
+>>>>>>> ff128337f961ce2c8d1c7273ff20bd093e5188a6
     end
   end
   

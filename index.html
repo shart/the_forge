@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<!-- saved from url=(0040)http://bl.ocks.org/mbostock/raw/4062045/ -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<style>
+
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.link {
+  stroke: orange;
+  stroke-opacity: 1;
+}
+
+/*.theTitle {
+    color: #000 !important;
+    font-size: 1.25em !important;
+    width: 30px;
+    height: 10px;
+    padding: 4px 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .container {
+    display: inline-block !important;
+    box-sizing: border-box !important;
+    width:20px !important;
+    height: 10px !important;
+    background: #000 !important;
+  }
+
+  svg {
+    position:fixed;
+    z-index: -1;
+  }*/
+</style>
+</head>
+<body style="">
+<script src="./Myriel_files/d3.v3.min.js"></script> 
+<script>
+
+var width = 960,
+    height = 500;
+
+var color = d3.scale.category20();
+
+var force = d3.layout.force()
+    .charge( function(d) { return d.nweight > 0 ? -20 : 0 ; })
+    .friction( 0.001 )
+    .linkStrength(0.5)
+    .linkDistance(250)
+    .size([width, height]);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+d3.json("cleanjson.json", function(error, graph) {
+  force
+      .nodes(graph.nodes) // Get/Set Node Data
+      .links(graph.links) // Get/Set Link Data
+      .start();
+
+  var link = svg.selectAll(".link") //Selects all Links
+      .data(graph.links)
+      .enter().append("line")
+      .attr("class", "link")
+      .style("stroke-width", function(d) { return 1.2*Math.sqrt(d.lweight) ; }); //Sets Link Line Weight derived from the 'lweight' data point in the 'links' data set. Swap out 
+  
+  var node = svg.selectAll(".node")
+      .data(graph.nodes)
+      .style("display", function() {})
+      .enter().append("svg:a")
+      .attr("xlink:href", function(d) {  return d.nweight > 0 ? d.url : "" ;  }) // Throw in the URL Data object into the page
+      .attr("target", "_blank")
+      .append("svg:circle")
+      .attr("class", "node") // Adds the class 'node' to the circle element
+      .attr("r", function(d) { return d.nweight > 0 ? 12 : 0 ; })
+      .style("fill", "DarkRed ") // Sets Node Color
+      .style("stroke", "LightGoldenRodYellow ") // Sets Node Color
+      .call(force.drag);
+    
+var texts = svg.selectAll("text.label")
+                .data(graph.nodes)
+                .enter().append("text")
+                .attr("class", "label")
+                .attr("fill", "black")
+                .style("display", function(d) {  return d.nweight ==0 ? "none" : "block" ; })
+                .text(function(d) {  return d.title;  });
+
+
+  force.on("tick", function() {
+    link.attr("x1", function(d) { return d.source.x; }) // 'source' and 'target' are defined in the 'links' set of data. 'source' data is being processed by the library for x and y data
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; }); 
+
+    node.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });
+
+    texts.attr("transform", function(d) {
+        return "translate(" + d.x + "," + d.y + ")";
+    });
+  });
+});
+
+</script>
+</body></html>
