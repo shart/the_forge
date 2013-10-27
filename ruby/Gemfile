@@ -1,0 +1,3 @@
+source "localhost"
+ruby "2.0.0"
+gem 'wiki-map', '1.0.0'
