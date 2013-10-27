@@ -1,0 +1,15 @@
+{"nodes":
+[
+{"title":"Ruby, Alaska","url":"http://en.wikipedia.org/wiki/Ruby,_Alaska","nweight":1},
+{"title":"Allakaket, Alaska","url":"http://en.wikipedia.org/wiki/Allakaket,_Alaska","nweight":1},
+{"title":"Alatna, Alaska","url":"http://en.wikipedia.org/wiki/Alatna,_Alaska","nweight":1},
+{"title":"Anvik, Alaska","url":"http://en.wikipedia.org/wiki/Anvik,_Alaska","nweight":1}],
+
+
+
+"links":[
+{"source":0,"target":1,"lweight":1},
+
+{"source":0,"target":2,"lweight":1},
+
+{"source":0,"target":3,"lweight":1}]}
