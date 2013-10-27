@@ -53,14 +53,14 @@ var color = d3.scale.category20();
 
 var force = d3.layout.force()
     .charge(-40)
-    .linkDistance(50)
+    .linkDistance(500)
     .size([width, height]);
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-d3.json("bigjson.json", function(error, graph) {
+d3.json("shortjsonplay.json", function(error, graph) {
   force
       .nodes(graph.nodes) // Get/Set Node Data
       .links(graph.links) // Get/Set Link Data
@@ -72,26 +72,34 @@ d3.json("bigjson.json", function(error, graph) {
       .attr("class", "link")
       .style("stroke-width", function(d) { return Math.sqrt(d.lweight); }); //Sets Link Line Weight derived from the 'value' data point in the 'links' data set. Swap out wieght
 
-  var texts = svg.selectAll("text.label")
-                .data(graph.nodes)
-                .enter().append("text")
-                .attr("class", "label")
-                .attr("fill", "black")
-                .text(function(d) {  return d.title;  });
-
+  
 
   var node = svg.selectAll(".node")
       .data(graph.nodes)
-      .enter().append("circle")
-    
+      <!--.enter().append("circle")-->
+      .enter().append("svg:a")
+      .attr("xlink:href",function(d) {  return d.url;  })
+      .append("svg:circle")
       .attr("class", "node") // Adds the class 'node' to the circle elements
-      .attr("r", 5)
+      .attr("r", 10)
       .style("fill", "red") // Sets Node Color
+      <!--.on("click",click)-->
+  
+      <!--.attr("class", "node")--> // Adds the class 'node' to the circle elements
+      <!--.attr("r", 5)-->
+      <!--.style("fill", "red")--> // Sets Node Color
       //.append("div")
       //.attr("class", "container")
       //.append("a")
       //.attr("href", function(d) {return d.url;})
       .call(force.drag);
+
+var texts = svg.selectAll("text.label")
+                .data(graph.nodes)
+                .enter().append("text")
+                .attr("class", "label")
+                .attr("fill", "black")
+                .text(function(d) {  return d.title;  });
 
 
 
